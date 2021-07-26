@@ -973,6 +973,7 @@ class BaseScheduler(six.with_metaclass(ABCMeta)):
                         continue
 
                     run_times = job._get_run_times(now)
+                    self._logger.info('run times list: %s', run_times)
                     run_times = run_times[-1:] if run_times and job.coalesce else run_times
                     if run_times:
                         try:
@@ -995,6 +996,7 @@ class BaseScheduler(six.with_metaclass(ABCMeta)):
                         # Update the job if it has a next execution time.
                         # Otherwise remove it from the job store.
                         job_next_run = job.trigger.get_next_fire_time(run_times[-1], now)
+                        self._logger.info('job next run in "%s"', job_next_run)
                         if job_next_run:
                             job._modify(next_run_time=job_next_run)
                             jobstore.update_job(job)
